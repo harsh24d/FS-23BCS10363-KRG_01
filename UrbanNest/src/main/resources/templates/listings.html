@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Nest | Listings</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header class="site-header">
+    <div class="logo">Urban Nest</div>
+    <nav class="site-nav">
+        <a class="nav-link" th:href="@{/}">Home</a>
+        <a class="nav-link active" th:href="@{/listings}">Listings</a>
+        <a class="nav-link" href="#">Contact</a>
+    </nav>
+</header>
+
+<main>
+    <section class="listings-hero">
+        <h1>Available Listings</h1>
+        <p>Filter by location to find a match nearby.</p>
+        <form class="search-form inline" th:action="@{/listings}" method="get">
+            <input id="listings-search-input" type="text" name="location" placeholder="Search by city or neighborhood" th:value="${searchTerm}">
+            <button type="submit">Search</button>
+        </form>
+    </section>
+
+    <section class="results" th:if="${properties.size() > 0}">
+        <div class="results-count" th:text="${properties.size()} + ' homes found'">Results count</div>
+        <div class="card-grid">
+            <article class="property-card" th:each="property : ${properties}" th:data-id="${property.id}">
+                <a class="card-link-area" th:href="@{'/properties/' + ${property.id}}">
+                    <div class="card-media">
+                        <img th:src="${property.imageUrl}" th:alt="${property.title}">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-price" th:text="${'$' + #numbers.formatDecimal(property.price, 0, 'COMMA', 2, 'POINT')}">Price</div>
+                        <h3 class="card-title" th:text="${property.title}">Title</h3>
+                        <p class="card-location" th:text="${property.location}">Location</p>
+                        <p class="card-description" th:text="${property.description}">Description</p>
+                        <span class="card-link">View details</span>
+                    </div>
+                </a>
+            </article>
+        </div>
+    </section>
+
+    <section class="empty-state" th:if="${properties.size() == 0}">
+        <h2>No listings match your search.</h2>
+        <p>Try broadening your location or browse our featured homes.</p>
+        <a class="button" th:href="@{/}">Back to home</a>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <p>&copy; <span id="year"></span> Urban Nest. Crafted for modern renters.</p>
+</footer>
+
+<script th:src="@{/js/scripts.js}"></script>
+</body>
+</html>

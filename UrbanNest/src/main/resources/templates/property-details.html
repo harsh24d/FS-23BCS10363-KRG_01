@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${property.title} + ' | Urban Nest'">Property Details</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header class="site-header">
+    <div class="logo">Urban Nest</div>
+    <nav class="site-nav">
+        <a class="nav-link" th:href="@{/}">Home</a>
+        <a class="nav-link" th:href="@{/listings}">Listings</a>
+        <a class="nav-link" href="#">Contact</a>
+    </nav>
+</header>
+
+<main class="property-details">
+    <a class="text-link back-link" th:href="@{/listings}">&larr; Back to listings</a>
+
+    <section class="details-header">
+        <h1 th:text="${property.title}">Property Title</h1>
+        <p class="details-location" th:text="${property.location}">Property Location</p>
+        <div class="details-price" th:text="${'$' + #numbers.formatDecimal(property.price, 0, 'COMMA', 2, 'POINT')}">$0</div>
+    </section>
+
+    <section class="gallery" th:if="${property.imageGallery.size() > 0}">
+        <img id="primaryImage" class="gallery-primary" th:src="${property.imageGallery.get(0)}" th:alt="${property.title}">
+        <div class="thumbnail-row">
+            <button class="thumb" type="button" th:each="image, iterStat : ${property.imageGallery}" th:data-index="${iterStat.index}" th:data-src="${image}">
+                <img th:src="${image}" th:alt="${property.title} + ' thumbnail ' + ${iterStat.index + 1}">
+            </button>
+        </div>
+    </section>
+
+    <section class="details-body">
+        <div class="details-description">
+            <h2>Overview</h2>
+            <p th:text="${property.description}">Detailed description goes here.</p>
+        </div>
+        <aside class="details-sidebar">
+            <h2>Highlights</h2>
+            <ul class="amenities" th:if="${property.amenities.size() > 0}">
+                <li th:each="amenity : ${property.amenities}" th:text="${amenity}">Amenity</li>
+            </ul>
+            <button class="button primary" type="button">Contact Seller</button>
+        </aside>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <p>&copy; <span id="year"></span> Urban Nest. Crafted for modern renters.</p>
+</footer>
+
+<script th:src="@{/js/scripts.js}"></script>
+</body>
+</html>
